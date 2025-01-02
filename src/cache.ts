@@ -67,12 +67,13 @@ export class IndexedDBCache extends BaseCache {
   private dbName: string;
   private storeName: string;
   private db!: IDBDatabase;
+  private dbInitialized: Promise<void>;
 
   constructor(options: IndexedDBCacheOptions = {}) {
     super();
     this.dbName = options.dbName || "default-db";
     this.storeName = options.storeName || "default-store";
-    this.initDB();
+    this.dbInitialized = this.initDB();
   }
 
   private async initDB(): Promise<void> {
@@ -93,6 +94,7 @@ export class IndexedDBCache extends BaseCache {
   }
 
   public async get(key: string): Promise<any> {
+    await this.dbInitialized;
     const hashedKey = await this.getHash(key);
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(this.storeName, "readonly");
@@ -113,6 +115,7 @@ export class IndexedDBCache extends BaseCache {
   }
 
   public async set(key: string, value: any, ttl?: number): Promise<void> {
+    await this.dbInitialized;
     const hashedKey = await this.getHash(key);
     const expiry = ttl ? Date.now() + ttl : undefined;
 
@@ -127,6 +130,7 @@ export class IndexedDBCache extends BaseCache {
   }
 
   public async delete(key: string): Promise<void> {
+    await this.dbInitialized;
     const hashedKey = await this.getHash(key);
 
     return new Promise((resolve, reject) => {
@@ -140,6 +144,7 @@ export class IndexedDBCache extends BaseCache {
   }
 
   public async cleanup(): Promise<void> {
+    await this.dbInitialized;
     return new Promise((resolve, reject) => {
       const transaction = this.db.transaction(this.storeName, "readwrite");
       const store = transaction.objectStore(this.storeName);

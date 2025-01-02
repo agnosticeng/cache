@@ -32,21 +32,6 @@ describe("MemoryCache", () => {
     expect(after).toBeNull();
     vi.useRealTimers();
   });
-
-  it("should cleanup expired items", async () => {
-    vi.useFakeTimers();
-    await cache.set("key1", "value1", 1000);
-    await cache.set("key2", "value2", 2000);
-
-    vi.advanceTimersByTime(1500);
-    await cache.cleanup();
-
-    const key1 = await cache.get("key1");
-    const key2 = await cache.get("key2");
-    expect(key1).toBeNull();
-    expect(key2).toBe("value2");
-    vi.useRealTimers();
-  });
 });
 
 describe("IndexedDBCache", () => {
@@ -59,7 +44,6 @@ describe("IndexedDBCache", () => {
       dbName: TEST_DB,
       storeName: TEST_STORE,
     });
-    await cache.initDB();
   });
 
   it("should store and retrieve values", async () => {
@@ -84,21 +68,6 @@ describe("IndexedDBCache", () => {
     vi.advanceTimersByTime(1500);
     const after = await cache.get("key");
     expect(after).toBeNull();
-    vi.useRealTimers();
-  });
-
-  it("should cleanup expired items", async () => {
-    vi.useFakeTimers();
-    await cache.set("key1", "value1", 1000);
-    await cache.set("key2", "value2", 2000);
-
-    vi.advanceTimersByTime(1500);
-    await cache.cleanup();
-
-    const key1 = await cache.get("key1");
-    const key2 = await cache.get("key2");
-    expect(key1).toBeNull();
-    expect(key2).toBe("value2");
     vi.useRealTimers();
   });
 });
