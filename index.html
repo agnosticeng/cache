@@ -8,7 +8,28 @@
     <body>
         <div id="app"></div>
         <script type="module">
-            import { Cache } from "/src/cache.ts";
+            import { MemoryCache, IndexedDBCache } from "/src/cache.ts";
+
+            const memCache = new MemoryCache();
+            const indexedDBCache = new IndexedDBCache({
+                dbName: "my-cache",
+                storeName: "test-store",
+            });
+
+            async function testCache() {
+                await memCache.set("test-key", "test-value", 5000);
+                const memValue = await memCache.get("test-key");
+                console.log("Memory cache value:", memValue);
+
+                await indexedDBCache.set("db-key", { data: "test" }, 10000);
+                const dbValue = await indexedDBCache.get("db-key");
+                console.log("IndexedDB value:", dbValue);
+
+                await memCache.cleanup();
+                await indexedDBCache.cleanup();
+            }
+
+            testCache().catch(console.error);
         </script>
     </body>
 </html>

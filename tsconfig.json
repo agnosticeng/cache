@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/sqlite.ts"]
+  "include": ["src/cache.ts"]
 }
