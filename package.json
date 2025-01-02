@@ -1,0 +1,32 @@
+{
+  "name": "@agnosticeng/cache",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agnosticeng/cache.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "~5.6.2",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  },
+  "main": "./dist/cache.umd.cjs",
+  "types": "./dist/cache.d.ts",
+  "module": "./dist/cache.js",
+  "exports": {
+    ".": {
+      "import": "./dist/cache.js",
+      "require": "./dist/cache.cjs"
+    }
+  }
+}
